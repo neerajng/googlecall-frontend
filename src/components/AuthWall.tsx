@@ -1,7 +1,6 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
-import apiCall from '@/lib/apiCall';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 export const AuthWall = () => {

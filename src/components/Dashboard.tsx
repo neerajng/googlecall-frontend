@@ -14,12 +14,22 @@ export const Dashboard = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [state, setState] = useState<any>({});
 
+  const handleLogout = async () => {
+    try {
+      await apiCall._get(`/v1/auth/logout`);      
+    } catch (err) {
+      console.error(err);
+      router.push('/dashboard');
+    }
+  };
+
   const fetchEvents = async () => {
     try {
       setLoading(true);
       const data = await apiCall._get(`/v1/calendar/upcoming`);
       setState(data);
     } catch (err) {
+      console.error(err);
       setError('Failed to fetch calendar events.');
       router.push('/dashboard');
     } finally {
@@ -51,8 +61,8 @@ export const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    const num = state?.data?.phone || ""
-    setPhoneNumber(num)
+    const num = state?.data?.phone || '';
+    setPhoneNumber(num);
   }, [state]);
 
   const user = state?.data;
@@ -76,10 +86,20 @@ export const Dashboard = () => {
 
   return (
     <div className="w-full px-4 py-6 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div className="flex justify-end pb-4">
+        <button
+          onClick={handleLogout}
+          className="px-4 py-2 cursor-pointer bg-red-600 hover:bg-red-700 text-white font-medium rounded-md shadow-sm transition-colors"
+        >
+          Logout
+        </button>
+      </div>
       <div className="text-center mb-10">
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-3">
-          Calendar Call Reminder Dashboard
-        </h1>
+        <div className="flex justify-center items-center mb-6">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white">
+            Calendar Call Reminder Dashboard
+          </h1>
+        </div>
         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
           Connect your Google Calendar to schedule phone reminders.
         </p>
@@ -101,13 +121,18 @@ export const Dashboard = () => {
               className="rounded-full border-2 border-gray-200 dark:border-gray-600"
             />
             <div className="text-center sm:text-left">
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-white">{user.name}</h2>
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+                {user.name}
+              </h2>
               <p className="text-gray-600 dark:text-gray-400">{user.email}</p>
             </div>
           </div>
 
           <div className="w-full">
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label
+              htmlFor="phone"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
               Phone Number for Reminders
             </label>
             <div className="flex gap-2">
@@ -115,7 +140,9 @@ export const Dashboard = () => {
                 type="tel"
                 id="phone"
                 value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ''))}
+                onChange={(e) =>
+                  setPhoneNumber(e.target.value.replace(/\D/g, ''))
+                }
                 placeholder="Enter 10-digit Indian phone number"
                 className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                 maxLength={10}
@@ -130,10 +157,14 @@ export const Dashboard = () => {
               </button>
             </div>
             {phoneError && (
-              <p className="mt-1 text-sm text-red-600 dark:text-red-400">{phoneError}</p>
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                {phoneError}
+              </p>
             )}
             {success && (
-              <p className="mt-1 text-sm text-green-600 dark:text-green-400">{success}</p>
+              <p className="mt-1 text-sm text-green-600 dark:text-green-400">
+                {success}
+              </p>
             )}
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
               We'll call this number 5 minutes before your events
@@ -181,10 +212,12 @@ export const Dashboard = () => {
                       {formatToIST(event.end?.dateTime)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${event.status === 'confirmed'
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                        : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                        }`}>
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${event.status === 'confirmed'
+                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                            : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                          }`}
+                      >
                         {event.status}
                       </span>
                     </td>
@@ -204,12 +237,14 @@ export const Dashboard = () => {
             </table>
           </div>
         </div>
-      ) : !loading && (
-        <div className="text-center py-12">
-          <p className="text-gray-500 dark:text-gray-400">
-            No upcoming events found in your calendar.
-          </p>
-        </div>
+      ) : (
+        !loading && (
+          <div className="text-center py-12">
+            <p className="text-gray-500 dark:text-gray-400">
+              No upcoming events found in your calendar.
+            </p>
+          </div>
+        )
       )}
 
       {loading && (
