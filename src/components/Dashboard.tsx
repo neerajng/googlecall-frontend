@@ -18,7 +18,7 @@ export const Dashboard = () => {
     try {
       await apiCall._get(`/v1/auth/logout`);      
     } catch (err) {
-      console.error(err);
+      console.log(err);
       router.push('/dashboard');
     }
   };

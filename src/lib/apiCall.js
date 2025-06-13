@@ -23,7 +23,7 @@ function execute(method, url, data = {}, header = {}) {
                 else reject(data.message);
             })
             .catch((error) => {
-                console.error(JSON.stringify(error));
+                console.log(JSON.stringify(error));
                 reject({
                     status: 'error',
                     message: error?.response?.data?.message ?? "Something didn’t work as expected. Don’t worry! Let’s try again.",
