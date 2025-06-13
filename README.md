@@ -1,6 +1,6 @@
 # GoogleCall Frontend
 
-A modern web application built with Next.js for managing and interacting with Google Call services.
+A modern web application built with Next.js for managing and interacting with Google login and calender event Call services.
 
 ## Features
 
